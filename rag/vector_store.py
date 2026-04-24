@@ -111,7 +111,7 @@ class VectorStoreService:
 if __name__ == '__main__':
     vs = VectorStoreService()
 
-    vs.load_document()
+    vs.load_document() ## 需要手动load文档
 
     retriever = vs.get_retriever()
 
