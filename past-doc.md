@@ -26,8 +26,7 @@ def report_prompt_switch(request: ModelRequest):     # 动态切换提示词
 
 qwen3-rerank
 qwen3-coder-next
-回答格式：
-![img.png](img.png)
+
 
 
 ## 📋 项目整体架构与调用流程
