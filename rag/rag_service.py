@@ -10,7 +10,7 @@ from langchain_core.prompts import PromptTemplate
 from model.factory import chat_model
 from utils.logger_handler import logger
 from rag.rerank_service import rerank_service
-
+import os
 
 def print_prompt(prompt): #调试用 把prompt、引用的参考资料打印到控制台
     print("="*20)
@@ -31,6 +31,11 @@ class RagSummarizeService(object):
 
     def _init_chain(self):
         chain = self.prompt_template | print_prompt | self.model | StrOutputParser()
+        if os.getenv("LANGCHAIN_TRACING_V2") == "true":
+            from langchain_core.callbacks.tracers import LangChainTracer
+            tracer = LangChainTracer(project_name=os.getenv("LANGCHAIN_PROJECT", "default"))
+            chain = chain.with_config({"callbacks": [tracer]})
+
         return chain
 
     def retriever_docs(self, query: str) -> list[Document]:
@@ -74,6 +79,12 @@ class RagSummarizeService(object):
 
         try:
             chain = rewrite_prompt | chat_model
+
+            if os.getenv("LANGCHAIN_TRACING_V2") == "true":
+                from langchain_core.callbacks.tracers import LangChainTracer
+                tracer = LangChainTracer(project_name=os.getenv("LANGCHAIN_PROJECT", "default"))
+                chain = chain.with_config({"callbacks": [tracer]})
+
             rewritten_query = chain.invoke({"query": query}).content.strip()
             logger.info(f"[query_rewrite_tool] 原始查询: {query} -> 改写后: {rewritten_query}")
             return rewritten_query

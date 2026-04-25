@@ -4,3 +4,4 @@
 /.idea
 /chroma_db
 md5.text
+.env

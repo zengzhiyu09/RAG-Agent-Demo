@@ -3,6 +3,8 @@ import time
 import streamlit as st
 from agent.react_agent import ReactAgent
 from utils.logger_handler import logger
+from dotenv import load_dotenv
+load_dotenv() #载入.env文件
 
 # 标题
 st.title("您的理财管家")
