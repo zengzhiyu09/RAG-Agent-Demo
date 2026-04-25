@@ -1,0 +1,14 @@
+langchain-core
+langchain
+langchain-community
+langchain-openai
+langchain-milvus
+# langgraph
+unstructured
+pathlib
+python-dotenv
+#tongyi 调用
+dashscope
+
+
+#已导入
