@@ -12,7 +12,7 @@ from utils.logger_handler import logger
 from rag.rerank_service import rerank_service
 
 
-def print_prompt(prompt): #调试用 把prompt打印到控制台
+def print_prompt(prompt): #调试用 把prompt、引用的参考资料打印到控制台
     print("="*20)
     print(prompt.to_string())
     print("="*20)
@@ -54,8 +54,10 @@ class RagSummarizeService(object):
         counter = 0
         for doc in context_docs:
             counter += 1
-            score = doc.metadata.get("rerank_score", "N/A")
-            context += f"【参考资料{counter}】(相关性：{score}): 参考资料：{doc.page_content} | 参考元数据：{doc.metadata}\n"
+            score = doc.metadata.get("rerank_score", "null")
+            source_file = doc.metadata.get("source", "Unknown").split("\\")[-1]
+
+            context += f"【参考资料{counter}】(相关性：{score},来源：{source_file}); 内容：{doc.page_content} \n"
 
         return self.chain.invoke(
             {
@@ -83,4 +85,4 @@ if __name__ == '__main__':
     rag = RagSummarizeService()
 
     # print(rag.rag_summarize("小户型适合哪些扫地机器人"))
-    print(rag.query_rewrite_tool("手头有5万闲钱，怎么理财？"))
+    print(rag.rag_summarize("手头有5万闲钱，怎么理财？"))

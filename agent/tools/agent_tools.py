@@ -10,7 +10,6 @@ from utils.path_tool import get_abs_path
 rag = RagSummarizeService()
 
 
-external_data = {}
 
 
 @tool(description="从向量存储中检索参考资料，简单查询")
@@ -18,7 +17,7 @@ def rag_summarize(query: str) -> str:
     return rag.rag_summarize(query,use_rerank=False)
 
 @tool(description="带重排序检索。入参：query(检索词), use_rerank(是否开启重排序, 默认为True)。返回：经过重排序和总结的专业解答。")
-def advanced_rag_search(query: str, use_rerank: bool = True) -> str:
+def rerank_rag_search(query: str, use_rerank: bool = True) -> str:
     """
     带有可选重排序功能的 RAG 检索工具
     """

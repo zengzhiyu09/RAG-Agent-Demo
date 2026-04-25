@@ -1,8 +1,8 @@
-import os
 import hashlib
-from utils.logger_handler import logger
-from langchain_core.documents import Document
+import os
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
+from langchain_core.documents import Document
+from utils.logger_handler import logger
 
 
 def get_file_md5_hex(filepath: str):     # 获取文件的md5的十六进制字符串
@@ -52,8 +52,36 @@ def listdir_with_allowed_type(path: str, allowed_types: tuple[str]):        # �
 
 
 def pdf_loader(filepath: str, passwd=None) -> list[Document]:
-    return PyPDFLoader(filepath, passwd).load()
+    documents = PyPDFLoader(filepath, passwd).load()
+    for doc in documents:
+        doc.metadata['source'] = filepath
+        doc.metadata['file_type'] = 'pdf'
+
+    return documents
 
 
 def txt_loader(filepath: str) -> list[Document]:
-    return TextLoader(filepath, encoding="utf-8").load()
+    documents =  TextLoader(filepath, encoding="utf-8").load()
+    # 为每个文档添加统一的元数据
+    for doc in documents:
+        doc.metadata['source'] = filepath
+        doc.metadata['file_type'] = 'txt'
+    return  documents
+
+def md_loader(filepath: str) -> list[Document]:
+    """
+    加载 Markdown 格式文档
+    """
+    try:
+        documents = TextLoader(filepath, encoding="utf-8").load()
+
+        # 为每个文档添加来源元数据
+        for doc in documents:
+            doc.metadata['source'] = filepath
+            doc.metadata['file_type'] = 'markdown'
+
+        logger.info(f"[md_loader] 成功加载 Markdown 文件: {filepath}")
+        return documents
+    except Exception as e:
+        logger.error(f"[md_loader] 加载 Markdown 文件失败 {filepath}: {e}")
+        return []

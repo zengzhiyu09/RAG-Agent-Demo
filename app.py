@@ -2,9 +2,11 @@ import time
 
 import streamlit as st
 from agent.react_agent import ReactAgent
+from utils.logger_handler import logger
 
 # 标题
-st.title("祝您财运亨通~")
+st.title("您的理财管家")
+st.caption("本回答由AI生成，仅供参考，请仔细甄别，谨慎投资。")
 st.divider()
 
 if "agent" not in st.session_state:
@@ -40,3 +42,5 @@ if prompt:
         complete_res = "\n\n".join(response_messages)
         st.session_state["message"].append({"role": "assistant", "content": complete_res})
         st.rerun()
+
+
