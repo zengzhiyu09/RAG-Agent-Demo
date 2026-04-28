@@ -8,5 +8,6 @@ python-dotenv
 dashscope
 streamlit
 langsmith
+ragas
 
 #已导入
